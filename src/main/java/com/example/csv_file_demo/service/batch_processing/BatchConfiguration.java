@@ -3,12 +3,15 @@ package com.example.csv_file_demo.service.batch_processing;
 import com.example.csv_file_demo.model.Author;
 import com.example.csv_file_demo.model.Book;
 import com.example.csv_file_demo.repository.BookRepository;
+import com.example.csv_file_demo.service.batch_processing.partition.ColumnRangePartitioner;
 import lombok.AllArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.partition.PartitionHandler;
+import org.springframework.batch.core.partition.support.TaskExecutorPartitionHandler;
 import org.springframework.batch.integration.async.AsyncItemProcessor;
 import org.springframework.batch.integration.async.AsyncItemWriter;
 import org.springframework.batch.item.ItemProcessor;
@@ -34,7 +37,7 @@ public class BatchConfiguration {
 
     private StepBuilderFactory stepBuilderFactory;
 
-    private BookRepository bookRepository;
+    private BookWriter bookWriter;
 
     //Step1 saving the book info in a db
     @Bean
@@ -69,22 +72,37 @@ public class BatchConfiguration {
 
 
     //Whatever data we get here, we just apply save method from the book repository
+
+
     @Bean
-    public RepositoryItemWriter<Book> writer(){
-
-        RepositoryItemWriter<Book> writer = new RepositoryItemWriter<>();
-        writer.setRepository(bookRepository);
-
-        return writer;
+    public ColumnRangePartitioner partitioner(){
+        return new ColumnRangePartitioner();
     }
 
     @Bean
-    public Step step1(){
-        return stepBuilderFactory.get("csv-step").<Book, Book>chunk(100)
+    public PartitionHandler partitionHandler(){
+        TaskExecutorPartitionHandler taskExecutorPartitionHandler = new TaskExecutorPartitionHandler();
+        taskExecutorPartitionHandler.setGridSize(300);
+        taskExecutorPartitionHandler.setTaskExecutor(taskExecutor());
+        taskExecutorPartitionHandler.setStep(slaveStep());
+        return taskExecutorPartitionHandler;
+    }
+
+    @Bean
+    public Step slaveStep(){
+        return stepBuilderFactory.get("slave-step").<Book, Book>chunk(100)
                 .reader(reader())
                 .processor(processor())
-                .writer(writer())
-                .taskExecutor(taskExecutor())
+                .writer(bookWriter)
+                .build();
+
+    }
+
+    @Bean
+    public Step masterStep(){
+        return stepBuilderFactory.get("master-step")
+                .partitioner(slaveStep().getName(), partitioner())
+                .partitionHandler(partitionHandler())
                 .build();
 
     }
@@ -120,7 +138,7 @@ public class BatchConfiguration {
     @Bean
     public Job job(){
         return jobBuilderFactory.get("importBooks")
-                .flow(step1())
+                .flow(masterStep())
                 .end().build();
     }
 
@@ -128,7 +146,7 @@ public class BatchConfiguration {
     public ThreadPoolTaskExecutor taskExecutor(){
         ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
         threadPoolTaskExecutor.setCorePoolSize(10);
-        threadPoolTaskExecutor.setMaxPoolSize(10);
+        threadPoolTaskExecutor.setMaxPoolSize(40);
         threadPoolTaskExecutor.afterPropertiesSet();
         return threadPoolTaskExecutor;
     }
