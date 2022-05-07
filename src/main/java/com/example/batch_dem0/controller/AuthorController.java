@@ -1,5 +1,6 @@
 package com.example.batch_dem0.controller;
 
+import com.example.batch_dem0.service.AuthorService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -18,19 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthorController {
 
     @Autowired
-    private JobLauncher jobLauncher;
-    @Autowired
-    private Job job;
+    private AuthorService authorService;
 
-    @PostMapping("/parseBooks")
+    @PostMapping("/parse-books")
     public void savingCsvInDB(){
-        JobParameters jobParameters = new JobParametersBuilder()
-                .addLong("startAt", System.currentTimeMillis()).toJobParameters();
-        try {
-            jobLauncher.run(job, jobParameters);
-        } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
-            e.printStackTrace();
-        }
+        authorService.parseCsv();
     }
 
 }

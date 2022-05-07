@@ -30,4 +30,7 @@ public class Image {
     @Column(name = "imageURLL")
     private String imageURLL;
 
+    @Column(name = "imageStatus")
+    private String imageStatus;
+
 }

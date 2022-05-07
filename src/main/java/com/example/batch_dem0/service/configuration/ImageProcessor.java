@@ -8,6 +8,7 @@ public class ImageProcessor implements ItemProcessor<Image, Image> {
 
     @Override
     public Image process(Image image) throws Exception {
+        image.setImageStatus("Empty");
         return image;
     }
 }

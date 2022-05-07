@@ -22,6 +22,7 @@ import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
@@ -134,7 +135,7 @@ public class BatchConfiguration {
 
     @Bean
     public Step step2(){
-        return stepBuilderFactory.get("csv-image-step").<Image, Image>chunk(100)
+        return stepBuilderFactory.get("csv-image-step").<Image, Image>chunk(500)
                 .reader(imageReader())
                 .processor(imageProcessor())
                 .writer(imageWriter())
