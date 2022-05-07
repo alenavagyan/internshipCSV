@@ -108,32 +108,32 @@ public class BatchConfiguration {
     }
 
     //Step2 saving the author in db
-    @Bean
-    public FlatFileItemReader<Author> authorReader(){
-        FlatFileItemReader<Author> authorItemReader = new FlatFileItemReader<>();
-        authorItemReader.setResource(new FileSystemResource("src/main/resources/BX-Books.csv"));
-        authorItemReader.setName("csvAuthorReader");
-        authorItemReader.setLinesToSkip(1);
-        authorItemReader.setLineMapper(authorLineMapper());
-        authorItemReader.setStrict(false);
-        return authorItemReader;
-    }
-
-    private LineMapper<Author> authorLineMapper() {
-        DefaultLineMapper<Author> authorLineMapper = new DefaultLineMapper<>();
-
-        DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
-        lineTokenizer.setDelimiter(";");
-        lineTokenizer.setStrict(false);
-        lineTokenizer.setNames("Book-Author");
-
-        BeanWrapperFieldSetMapper<Author> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
-        fieldSetMapper.setTargetType(Author.class);
-
-        authorLineMapper.setLineTokenizer(lineTokenizer);
-        authorLineMapper.setFieldSetMapper(fieldSetMapper);
-        return authorLineMapper;
-    }
+//    @Bean
+//    public FlatFileItemReader<Author> authorReader(){
+//        FlatFileItemReader<Author> authorItemReader = new FlatFileItemReader<>();
+//        authorItemReader.setResource(new FileSystemResource("src/main/resources/BX-Books.csv"));
+//        authorItemReader.setName("csvAuthorReader");
+//        authorItemReader.setLinesToSkip(1);
+//        authorItemReader.setLineMapper(authorLineMapper());
+//        authorItemReader.setStrict(false);
+//        return authorItemReader;
+//    }
+//
+//    private LineMapper<Author> authorLineMapper() {
+//        DefaultLineMapper<Author> authorLineMapper = new DefaultLineMapper<>();
+//
+//        DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
+//        lineTokenizer.setDelimiter(";");
+//        lineTokenizer.setStrict(false);
+//        lineTokenizer.setNames("Book-Author");
+//
+//        BeanWrapperFieldSetMapper<Author> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
+//        fieldSetMapper.setTargetType(Author.class);
+//
+//        authorLineMapper.setLineTokenizer(lineTokenizer);
+//        authorLineMapper.setFieldSetMapper(fieldSetMapper);
+//        return authorLineMapper;
+//    }
 
     @Bean
     public Job job(){
