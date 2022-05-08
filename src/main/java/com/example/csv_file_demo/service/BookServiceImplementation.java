@@ -26,8 +26,12 @@ public class BookServiceImplementation implements BookService{
     private JobLauncher jobLauncher;
     @Autowired
     private Job job;
-    @Autowired
+
     BookRepository bookRepository;
+
+    public BookServiceImplementation(BookRepository bookRepository){
+        this.bookRepository=bookRepository;
+    }
 
     public void savingCsvInDB(){
         JobParameters jobParameters = new JobParametersBuilder()

@@ -20,7 +20,8 @@ import java.util.List;
 @RequestMapping("/book")
 public class BookController {
 
-    private BookServiceImplementation bookService = new BookServiceImplementation();
+    @Autowired
+    private BookServiceImplementation bookService;
     @Autowired
     private JobLauncher jobLauncher;
     @Autowired
