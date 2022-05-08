@@ -11,8 +11,12 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 
 @Service
@@ -41,9 +45,18 @@ public class BookServiceImplementation implements BookService{
         return books;
     }
 
+    @Scheduled(fixedRate = 5000)
     public void downloadingImages(){
+        for(int i=0; i<=280000; i++) {
+            if (i % 100 == 0) {
+
+            }
+        }
+
+        System.out.println("Job works fine");
+
+
 
     }
-
 
 }
