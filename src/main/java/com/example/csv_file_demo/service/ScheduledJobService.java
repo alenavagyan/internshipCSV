@@ -1,6 +1,9 @@
 package com.example.csv_file_demo.service;
 
+import com.example.csv_file_demo.model.Book;
+import com.example.csv_file_demo.model.Image;
 import com.example.csv_file_demo.repository.BookRepository;
+import com.example.csv_file_demo.repository.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -8,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 @Service
 public class ScheduledJobService {
@@ -15,8 +19,17 @@ public class ScheduledJobService {
     @Autowired
     BookRepository bookRepository;
 
+    @Autowired
+    ImageRepository imageRepository;
+
     String link = "http://images.amazon.com/images/P/0195153448.01.LZZZZZZZ.jpg";
     File out = new File("D:\\Prgramming\\Java\\Image_Downloading_Demo\\foto\\New Foto.png");
+
+    public void getUrl(){
+        for(int i=0; i<=280000; i++){
+            List<Image> images = (List<Image>) imageRepository.getById((long) i);
+        }
+    }
 
     @Scheduled(fixedRate = 5000)
     public void downloadingImage() {
