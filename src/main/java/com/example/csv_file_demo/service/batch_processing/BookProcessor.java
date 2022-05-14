@@ -15,7 +15,6 @@ public class BookProcessor implements ItemProcessor<Book, Book> {
 
     @Override
     public Book process(Book book) throws Exception {
-
         return book;
     }
 }

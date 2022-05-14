@@ -16,6 +16,8 @@ import java.util.List;
 @Service
 public class ScheduledJobService {
 
+    private int k=0;
+
     @Autowired
     BookRepository bookRepository;
 
@@ -26,9 +28,16 @@ public class ScheduledJobService {
     File out = new File("D:\\Prgramming\\Java\\Image_Downloading_Demo\\foto\\New Foto.png");
 
     public void getUrl(){
-        for(int i=0; i<=280000; i++){
-            List<Image> images = (List<Image>) imageRepository.getById((long) i);
+
+        while(k<=280000){
+            k+=100;
+            for(int i=0; i<=k; i++){
+                List<Image> images = (List<Image>) imageRepository.getById((long) i);
+                System.out.println(images);
+            }
+
         }
+
     }
 
     @Scheduled(fixedRate = 5000)

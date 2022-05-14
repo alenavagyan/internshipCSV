@@ -51,6 +51,7 @@ public class BatchConfiguration {
         return itemReader;
     }
 
+    // TODO Parse csv in service class
     private LineMapper<Book> lineMapper() {
         DefaultLineMapper<Book> lineMapper = new DefaultLineMapper<>();
 
@@ -60,7 +61,7 @@ public class BatchConfiguration {
         lineTokenizer.setNames("ISBN","Book-Title","Book-Author","Year-Of-Publication","Publisher","Image-URL-S","Image-URL-M","Image-URL-L");
 
         BeanWrapperFieldSetMapper<Book> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
-        fieldSetMapper.setTargetType(Book.class);
+        fieldSetMapper.setTargetType(Book.class); //TODO Use Book DTO
 
         lineMapper.setLineTokenizer(lineTokenizer);
         lineMapper.setFieldSetMapper(fieldSetMapper);

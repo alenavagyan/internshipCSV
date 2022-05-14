@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
 
-    @Query(value = "SELECT * FROM Books b WHERE" + "b.book_Author LIKE CONCAT('%', :authorName, '%')", nativeQuery = true)
+    @Query(value = "SELECT * FROM Books b WHERE b.book_Author LIKE CONCAT(authorName)", nativeQuery = true)
     List<Book> findBooksByBook_Author(String authorName);
 
 }
